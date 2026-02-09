@@ -1,0 +1,54 @@
+<div class="home-container">
+  <header class="home-header">
+    <div class="container">
+      <h1>🎯 JobFinder</h1>
+      <nav>
+        <button class="btn-profile" routerLink="/profile">
+          Mon Profil
+        </button>
+        <button class="btn-logout" (click)="logout()">
+          Déconnexion
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="home-content">
+    <div class="container">
+      <div class="welcome-card">
+        <h2>Bienvenue, {{ currentUser?.prenom }} {{ currentUser?.nom }}! 👋</h2>
+        <p class="email">{{ currentUser?.email }}</p>
+        <p class="subtitle">Vous êtes connecté avec succès à JobFinder</p>
+      </div>
+
+      <div class="info-section">
+        <div class="info-card">
+          <h3>✅ Authentification réussie</h3>
+          <p>Votre système d'authentification fonctionne parfaitement!</p>
+        </div>
+
+        <div class="info-card">
+          <h3>🔐 Session active</h3>
+          <p>Votre session est stockée en toute sécurité dans le localStorage.</p>
+        </div>
+
+        <div class="info-card">
+          <h3>🛡️ Route protégée</h3>
+          <p>Cette page est protégée par le AuthGuard.</p>
+        </div>
+      </div>
+
+      <div class="next-steps">
+        <h3>Prochaines étapes du projet:</h3>
+        <ul>
+          <li>✅ Authentification (Login/Register)</li>
+          <li>✅ AuthGuard pour protéger les routes</li>
+          <li>⏳ Page Profil (modification des données)</li>
+          <li>⏳ Recherche d'offres d'emploi via API</li>
+          <li>⏳ Sauvegarde des favoris</li>
+          <li>⏳ Gestion des candidatures</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>

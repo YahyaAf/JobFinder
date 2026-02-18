@@ -3,11 +3,14 @@
     <div class="container">
       <h1>🎯 JobFinder</h1>
       <nav>
-        <button class="btn-profile" routerLink="/profile">
+        <button class="btn-profile" routerLink="/profile" *ngIf="isLoggedIn">
           Mon Profil
         </button>
-        <button class="btn-logout" (click)="logout()">
+        <button class="btn-logout" (click)="logout()" *ngIf="isLoggedIn">
           Déconnexion
+        </button>
+        <button class="btn-login" routerLink="/login" *ngIf="!isLoggedIn">
+          Se connecter
         </button>
       </nav>
     </div>
@@ -15,40 +18,141 @@
 
   <main class="home-content">
     <div class="container">
-      <div class="welcome-card">
-        <h2>Bienvenue, {{ currentUser?.prenom }} {{ currentUser?.nom }}! 👋</h2>
-        <p class="email">{{ currentUser?.email }}</p>
-        <p class="subtitle">Vous êtes connecté avec succès à JobFinder</p>
+      
+      <!-- Message de bienvenue si connecté -->
+      <div class="welcome-card" *ngIf="currentUser">
+        <h2>Bienvenue, {{ currentUser.prenom }} {{ currentUser.nom }}! 👋</h2>
+        <p class="subtitle">Trouvez l'emploi de vos rêves parmi des milliers d'offres</p>
       </div>
 
-      <div class="info-section">
-        <div class="info-card">
-          <h3>✅ Authentification réussie</h3>
-          <p>Votre système d'authentification fonctionne parfaitement!</p>
+      <!-- Message pour visiteurs non connectés -->
+      <div class="welcome-card" *ngIf="!currentUser">
+        <h2>Bienvenue sur JobFinder! 🎯</h2>
+        <p class="subtitle">Recherchez parmi des milliers d'offres d'emploi</p>
+      </div>
+
+      <!-- Barre de recherche -->
+      <div class="search-section">
+        <div class="search-bar">
+          <input 
+            type="text" 
+            [(ngModel)]="searchKeyword" 
+            (keyup.enter)="onSearch()"
+            placeholder="🔍 Rechercher par titre de poste (ex: Developer, Manager)"
+            class="search-input"
+          />
+          <button class="btn-search" (click)="onSearch()" [disabled]="loading">
+            <span *ngIf="!loading">Rechercher</span>
+            <span *ngIf="loading">Recherche...</span>
+          </button>
         </div>
 
-        <div class="info-card">
-          <h3>🔐 Session active</h3>
-          <p>Votre session est stockée en toute sécurité dans le localStorage.</p>
-        </div>
-
-        <div class="info-card">
-          <h3>🛡️ Route protégée</h3>
-          <p>Cette page est protégée par le AuthGuard.</p>
+        <!-- Filtre de localisation -->
+        <div class="filters">
+          <input 
+            type="text" 
+            [(ngModel)]="selectedLocation" 
+            (keyup.enter)="onSearch()"
+            placeholder="📍 Localisation (ex: New York, London)"
+            class="filter-input"
+          />
         </div>
       </div>
 
-      <div class="next-steps">
-        <h3>Prochaines étapes du projet:</h3>
-        <ul>
-          <li>✅ Authentification (Login/Register)</li>
-          <li>✅ AuthGuard pour protéger les routes</li>
-          <li>⏳ Page Profil (modification des données)</li>
-          <li>⏳ Recherche d'offres d'emploi via API</li>
-          <li>⏳ Sauvegarde des favoris</li>
-          <li>⏳ Gestion des candidatures</li>
-        </ul>
+      <!-- Loader -->
+      <div class="loader" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement des offres d'emploi...</p>
       </div>
+
+      <!-- Message d'erreur -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Résultats -->
+      <div class="results-info" *ngIf="!loading && jobs.length > 0">
+        <p>{{ totalJobs }} offres d'emploi trouvées - Page {{ currentPage + 1 }} sur {{ totalPages }}</p>
+      </div>
+
+      <!-- Liste des jobs -->
+      <div class="jobs-grid" *ngIf="!loading && jobs.length > 0">
+        <div class="job-card" *ngFor="let job of jobs">
+          <!-- En-tête de la carte -->
+          <div class="job-header">
+            <h3 class="job-title">{{ job.name }}</h3>
+            <p class="company-name">{{ job.company.name }}</p>
+          </div>
+
+          <!-- Informations -->
+          <div class="job-info">
+            <div class="info-item" *ngIf="job.locations && job.locations.length > 0">
+              <span class="icon">📍</span>
+              <span>{{ job.locations[0].name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="icon">📅</span>
+              <span>{{ formatDate(job.publication_date) }}</span>
+            </div>
+            <div class="info-item" *ngIf="job.levels && job.levels.length > 0">
+              <span class="icon">💼</span>
+              <span>{{ job.levels[0].name }}</span>
+            </div>
+          </div>
+
+          <!-- Description courte -->
+          <p class="job-description">
+            {{ getShortDescription(job.contents) }}
+          </p>
+
+          <!-- Actions -->
+          <div class="job-actions">
+            <button class="btn-view" (click)="viewJob(job)">
+              👁️ Voir l'offre
+            </button>
+            
+            <!-- Boutons visibles uniquement pour les utilisateurs connectés -->
+            <div class="auth-actions" *ngIf="isLoggedIn">
+              <button class="btn-favorite" (click)="addToFavorites(job)">
+                ⭐ Favoris
+              </button>
+              <button class="btn-track" (click)="trackApplication(job)">
+                📋 Suivre
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message si aucun résultat -->
+      <div class="no-results" *ngIf="!loading && jobs.length === 0">
+        <h3>😕 Aucune offre trouvée</h3>
+        <p>Essayez de modifier vos critères de recherche</p>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="!loading && jobs.length > 0">
+        <button 
+          class="btn-page" 
+          (click)="previousPage()" 
+          [disabled]="currentPage === 0"
+        >
+          ← Précédent
+        </button>
+        
+        <span class="page-info">
+          Page {{ currentPage + 1 }} / {{ totalPages }}
+        </span>
+        
+        <button 
+          class="btn-page" 
+          (click)="nextPage()" 
+          [disabled]="currentPage >= totalPages - 1"
+        >
+          Suivant →
+        </button>
+      </div>
+
     </div>
   </main>
 </div>

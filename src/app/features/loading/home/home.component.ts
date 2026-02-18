@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { JobService } from '../../../core/services/job.service';
 import { Job, JobsResponse } from '../../../core/model/job.model';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
+import { selectAllFavorites, selectIsFavorite } from '../../../core/store/favorites/favorites.selectors';
+import { Favorite } from '../../../core/model/favorite.model';
 
 @Component({
   selector: 'app-home',
@@ -27,16 +32,25 @@ export class HomeComponent implements OnInit {
 
   isLoggedIn = false;
 
+  favorites$: Observable<Favorite[]>;
+
   constructor(
     private authService: AuthService,
     private jobService: JobService,
-    private router: Router
-  ){}
+    private router: Router,
+    private store: Store
+  ){
+    this.favorites$ = this.store.select(selectAllFavorites);
+  }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
       this.isLoggedIn = !!user;
+
+      if (user) {
+        this.store.dispatch(FavoritesActions.loadFavorites({ userId: user.id }));
+      }
     });
 
     this.loadJobs();
@@ -95,8 +109,27 @@ export class HomeComponent implements OnInit {
   }
 
   addToFavorites(job: Job): void {
-    console.log('Ajouter aux favoris:', job.title);
-    alert('Fonctionnalité "Favoris" sera implémentée prochainement!');
+    if (!this.currentUser) {
+      alert('Vous devez être connecté pour ajouter aux favoris');
+      return;
+    }
+
+    this.store.select(selectIsFavorite(job.slug)).subscribe(isFavorite => {
+      if (isFavorite) {
+        alert('Cette offre est déjà dans vos favoris');
+      } else {
+        const favorite: Favorite = {
+          userId: this.currentUser!.id,
+          slug: job.slug,
+          title: job.title,
+          company_name: job.company_name,
+          location: job.location,
+          created_at: job.created_at
+        };
+        this.store.dispatch(FavoritesActions.addFavorite({ favorite }));
+        alert('Offre ajoutée aux favoris avec succès!');
+      }
+    }).unsubscribe();
   }
 
   trackApplication(job: Job): void {
@@ -127,5 +160,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  isFavorite(slug: string): Observable<boolean> {
+    return this.store.select(selectIsFavorite(slug));
+  }
 
 }

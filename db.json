@@ -7,5 +7,43 @@
       "email": "yahya@gmail.com",
       "password": "yahya123"
     }
+  ],
+  "favoritesOffers": [
+    {
+      "userId": 1,
+      "slug": "quereinstieg-horakustik-in-37077-gottingen-78805",
+      "title": "Quereinstieg Hörakustik in 37077 Göttingen",
+      "company_name": "audibene GmbH",
+      "location": "Göttingen",
+      "created_at": 1771430483,
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "slug": "finance-administration-manager-non-profit-berlin-140307",
+      "title": "Finance & Administration Manager Non-Profit (m/w/d)",
+      "company_name": "Join Impact",
+      "location": "Berlin",
+      "created_at": 1771427138,
+      "id": 2
+    },
+    {
+      "userId": 1,
+      "slug": "ingenieure-architektur-hochbau-hanover-64010",
+      "title": "Ingenieure (m/w/d) Architektur (Hochbau)",
+      "company_name": "PALTRON GmbH",
+      "location": "Hanover",
+      "created_at": 1771427141,
+      "id": 3
+    },
+    {
+      "userId": 1,
+      "slug": "fachinformatiker-systemintegration-it-multitalent-eibelstadt-77145",
+      "title": "Fachinformatiker Systemintegration - IT Multitalent (m/w/d)",
+      "company_name": "SUNTEC Energiesysteme GmbH",
+      "location": "Eibelstadt",
+      "created_at": 1771427138,
+      "id": 4
+    }
   ]
 }

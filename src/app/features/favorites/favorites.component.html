@@ -1,0 +1,59 @@
+<div class="favorites-container">
+  <header class="favorites-header">
+    <div class="container">
+      <button class="btn-back" (click)="goBack()">
+        ← Retour
+      </button>
+      <h1>⭐ Mes Favoris</h1>
+    </div>
+  </header>
+
+  <main class="favorites-content">
+    <div class="container">
+      <div class="loader" *ngIf="loading$ | async">
+        <div class="spinner"></div>
+        <p>Chargement de vos favoris...</p>
+      </div>
+
+      <div class="favorites-list" *ngIf="!(loading$ | async)">
+        <ng-container *ngIf="favorites$ | async as favorites">
+          <div class="empty-state" *ngIf="favorites.length === 0">
+            <div class="empty-icon">📭</div>
+            <h2>Aucun favori pour le moment</h2>
+            <p>Commencez à ajouter des offres à vos favoris pour les retrouver ici</p>
+            <button class="btn-browse" (click)="goBack()">
+              Parcourir les offres
+            </button>
+          </div>
+
+          <div class="favorites-grid" *ngIf="favorites.length > 0">
+            <div class="favorite-card" *ngFor="let favorite of favorites">
+              <div class="favorite-header">
+                <h3 class="favorite-title">{{ favorite.title }}</h3>
+                <button class="btn-remove" (click)="removeFavorite(favorite)" title="Retirer des favoris">
+                  ✕
+                </button>
+              </div>
+
+              <div class="favorite-info">
+                <div class="info-item">
+                  <span class="icon">🏢</span>
+                  <span>{{ favorite.company_name }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="icon">📍</span>
+                  <span>{{ favorite.location }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="icon">📅</span>
+                  <span>{{ formatDate(favorite.created_at) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </main>
+</div>
+

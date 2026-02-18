@@ -34,7 +34,7 @@
   gap: 10px;
 }
 
-.btn-profile, .btn-logout, .btn-login {
+.btn-profile, .btn-logout, .btn-login, .btn-favorites {
   padding: 10px 20px;
   border: 2px solid white;
   background: transparent;
@@ -45,6 +45,7 @@
   transition: all 0.3s;
 }
 
+.btn-favorites:hover,
 .btn-profile:hover {
   background: white;
   color: #667eea;
@@ -333,6 +334,18 @@
 .btn-favorite:hover {
   background: #667eea;
   color: white;
+}
+
+.btn-favorite.is-favorite {
+  background: #ffd700;
+  border-color: #ffd700;
+  color: #333;
+  font-weight: 700;
+}
+
+.btn-favorite.is-favorite:hover {
+  background: #ffed4e;
+  border-color: #ffed4e;
 }
 
 .btn-track:hover {

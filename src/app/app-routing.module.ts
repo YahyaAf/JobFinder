@@ -5,6 +5,7 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { HomeComponent } from './features/loading/home/home.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ProfileComponent } from './features/auth/profile/profile.component';
+import { FavoritesComponent } from './features/favorites/favorites.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
     canActivate: [authGuard]
   }
 ];

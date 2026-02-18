@@ -18,7 +18,7 @@
 
   <main class="home-content">
     <div class="container">
-      
+
       <!-- Message de bienvenue si connecté -->
       <div class="welcome-card" *ngIf="currentUser">
         <h2>Bienvenue, {{ currentUser.prenom }} {{ currentUser.nom }}! 👋</h2>
@@ -34,9 +34,9 @@
       <!-- Barre de recherche -->
       <div class="search-section">
         <div class="search-bar">
-          <input 
-            type="text" 
-            [(ngModel)]="searchKeyword" 
+          <input
+            type="text"
+            [(ngModel)]="searchKeyword"
             (keyup.enter)="onSearch()"
             placeholder="🔍 Rechercher par titre de poste (ex: Developer, Manager)"
             class="search-input"
@@ -49,9 +49,9 @@
 
         <!-- Filtre de localisation -->
         <div class="filters">
-          <input 
-            type="text" 
-            [(ngModel)]="selectedLocation" 
+          <input
+            type="text"
+            [(ngModel)]="selectedLocation"
             (keyup.enter)="onSearch()"
             placeholder="📍 Localisation (ex: New York, London)"
             class="filter-input"
@@ -72,7 +72,7 @@
 
       <!-- Résultats -->
       <div class="results-info" *ngIf="!loading && jobs.length > 0">
-        <p>{{ totalJobs }} offres d'emploi trouvées - Page {{ currentPage + 1 }} sur {{ totalPages }}</p>
+        <p>{{ totalJobs }} offres d'emploi trouvées - Page {{ currentPage }} sur {{ totalPages }}</p>
       </div>
 
       <!-- Liste des jobs -->
@@ -80,29 +80,33 @@
         <div class="job-card" *ngFor="let job of jobs">
           <!-- En-tête de la carte -->
           <div class="job-header">
-            <h3 class="job-title">{{ job.name }}</h3>
-            <p class="company-name">{{ job.company.name }}</p>
+            <h3 class="job-title">{{ job.title }}</h3>
+            <p class="company-name">{{ job.company_name }}</p>
           </div>
 
           <!-- Informations -->
           <div class="job-info">
-            <div class="info-item" *ngIf="job.locations && job.locations.length > 0">
+            <div class="info-item">
               <span class="icon">📍</span>
-              <span>{{ job.locations[0].name }}</span>
+              <span>{{ job.location }}</span>
             </div>
             <div class="info-item">
               <span class="icon">📅</span>
-              <span>{{ formatDate(job.publication_date) }}</span>
+              <span>{{ formatDate(job.created_at) }}</span>
             </div>
-            <div class="info-item" *ngIf="job.levels && job.levels.length > 0">
+            <div class="info-item" *ngIf="job.remote">
+              <span class="icon">💻</span>
+              <span>Télétravail</span>
+            </div>
+            <div class="info-item" *ngIf="job.job_types && job.job_types.length > 0">
               <span class="icon">💼</span>
-              <span>{{ job.levels[0].name }}</span>
+              <span>{{ job.job_types[0] }}</span>
             </div>
           </div>
 
           <!-- Description courte -->
           <p class="job-description">
-            {{ getShortDescription(job.contents) }}
+            {{ getShortDescription(job.description) }}
           </p>
 
           <!-- Actions -->
@@ -110,7 +114,7 @@
             <button class="btn-view" (click)="viewJob(job)">
               👁️ Voir l'offre
             </button>
-            
+
             <!-- Boutons visibles uniquement pour les utilisateurs connectés -->
             <div class="auth-actions" *ngIf="isLoggedIn">
               <button class="btn-favorite" (click)="addToFavorites(job)">
@@ -132,22 +136,22 @@
 
       <!-- Pagination -->
       <div class="pagination" *ngIf="!loading && jobs.length > 0">
-        <button 
-          class="btn-page" 
-          (click)="previousPage()" 
-          [disabled]="currentPage === 0"
+        <button
+          class="btn-page"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
         >
           ← Précédent
         </button>
-        
+
         <span class="page-info">
-          Page {{ currentPage + 1 }} / {{ totalPages }}
+          Page {{ currentPage }} / {{ totalPages }}
         </span>
-        
-        <button 
-          class="btn-page" 
-          (click)="nextPage()" 
-          [disabled]="currentPage >= totalPages - 1"
+
+        <button
+          class="btn-page"
+          (click)="nextPage()"
+          [disabled]="currentPage >= totalPages"
         >
           Suivant →
         </button>

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   loading = false;
   errorMessage = '';
 
-  currentPage = 0;
+  currentPage = 1;
   totalPages = 0;
   totalJobs = 0;
 
@@ -51,9 +51,9 @@ export class HomeComponent implements OnInit {
       location: this.selectedLocation
     }).subscribe({
       next: (response: JobsResponse) => {
-        this.jobs = response.results;
-        this.totalPages = response.page_count;
-        this.totalJobs = response.total;
+        this.jobs = response.data;
+        this.totalPages = response.meta.last_page;
+        this.totalJobs = response.meta.total;
         this.loading = false;
         console.log('Jobs chargés :', this.jobs.length);
       },
@@ -66,12 +66,12 @@ export class HomeComponent implements OnInit {
   }
 
   onSearch(): void {
-    this.currentPage = 0;
+    this.currentPage = 1;
     this.loadJobs();
   }
 
   goToPage(page: number): void {
-    if(page >=0 && page < this.totalPages){
+    if(page >= 1 && page <= this.totalPages){
       this.currentPage = page;
       this.loadJobs();
       window.scrollTo({ top: 0, behavior: 'smooth'});
@@ -79,33 +79,33 @@ export class HomeComponent implements OnInit {
   }
 
   nextPage(): void {
-    if(this.currentPage < this.totalPages -1){
+    if(this.currentPage < this.totalPages){
       this.goToPage(this.currentPage + 1);
     }
   }
 
   previousPage(): void {
-    if(this.currentPage > 0 ){
+    if(this.currentPage > 1){
       this.goToPage(this.currentPage - 1);
     }
   }
 
   viewJob(job: Job): void {
-    window.open(job.refs.landing_page, '_blank');
+    window.open(job.url, '_blank');
   }
 
   addToFavorites(job: Job): void {
-    console.log('Ajouter aux favoris:', job.name);
+    console.log('Ajouter aux favoris:', job.title);
     alert('Fonctionnalité "Favoris" sera implémentée prochainement!');
   }
 
   trackApplication(job: Job): void {
-    console.log('Suivre candidature:', job.name);
+    console.log('Suivre candidature:', job.title);
     alert('Fonctionnalité "Suivi de candidature" sera implémentée prochainement!');
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
+  formatDate(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
     return date.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
@@ -113,9 +113,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getShortDescription(contents: string): string {
+  getShortDescription(description: string): string {
     const div = document.createElement('div');
-    div.innerHTML = contents;
+    div.innerHTML = description;
     const text = div.textContent || div.innerText || '';
     return text.substring(0, 150) + '...';
   }
@@ -126,6 +126,6 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
-  
+
 
 }

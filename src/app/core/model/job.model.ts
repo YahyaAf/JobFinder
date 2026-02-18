@@ -1,47 +1,38 @@
+// Modèle pour l'API Arbeitnow
 export interface Job {
-  id: number;
-  name: string;                    // Titre du poste
-  company: {
-    id: number;
-    name: string;                  // Nom de l'entreprise
-    short_name?: string;
-  };
-  locations?: Array<{
-    name: string;                  // Localisation
-  }>;
-  publication_date: string;        // Date de publication
-  short_name: string;              // Description courte
-  contents: string;                // Description complète
-  refs: {
-    landing_page: string;          // Lien vers l'offre complète
-  };
-  levels?: Array<{
-    name: string;                  // Niveau d'expérience
-    short_name: string;
-  }>;
-  categories?: Array<{
-    name: string;                  // Catégorie du poste
-  }>;
-  type?: string;
-  model_type?: string;
+  slug: string;
+  company_name: string;
+  title: string;
+  description: string;
+  remote: boolean;
+  url: string;
+  tags: string[];
+  job_types: string[];
+  location: string;
+  created_at: number;
 }
 
 // Interface pour la réponse de l'API
 export interface JobsResponse {
-  results: Job[];
-  page: number;
-  page_count: number;
-  total: number;
-  items_per_page?: number;
-  took?: number;
-  timed_out?: boolean;
+  data: Job[];
+  links: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    per_page: number;
+    to: number;
+    total: number;
+  };
 }
 
 // Interface pour les filtres de recherche
 export interface JobSearchFilters {
   page?: number;
-  descending?: boolean;
   location?: string;
-  category?: string;
-  level?: string;
 }

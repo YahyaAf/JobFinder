@@ -1,67 +1,103 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import { Job, JobSearchFilters, JobsResponse } from '../model/job.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobService {
-  private apiUrl = 'https://www.themuse.com/api/public/jobs';
+  private apiUrl = 'https://www.arbeitnow.com/api/job-board-api';
+  private cachedJobs: Job[] = [];
+  private cacheLoaded = false;
 
   constructor(private http: HttpClient) {}
 
-  searchJobs(keyword?: string, filters?: JobSearchFilters): Observable<JobsResponse>{
-    let params = new HttpParams();
-
-    if(keyword && keyword.trim()){
-      params = params.set('page', filters?.page?.toString() || '0');
-    } else{
-      params = params.set('page', filters?.page?.toString() || '0');
+  searchJobs(keyword?: string, filters?: JobSearchFilters): Observable<JobsResponse> {
+    if (this.cacheLoaded) {
+      return of(this.filterAndPaginateJobs(this.cachedJobs, keyword, filters));
     }
 
-    if(filters?.location && filters.location.trim()){
-      params = params.set('location', filters.location);
+    const requests: Observable<JobsResponse>[] = [];
+    for (let i = 1; i <= 5; i++) {
+      const params = new HttpParams().set('page', i.toString());
+      requests.push(this.http.get<JobsResponse>(this.apiUrl, { params }));
     }
 
-    if(filters?.category && filters.category.trim()){
-      params = params.set('category', filters.category);
-    }
+    return forkJoin(requests).pipe(
+      map(responses => {
+        this.cachedJobs = [];
+        responses.forEach(response => {
+          if (response.data) {
+            this.cachedJobs.push(...response.data);
+          }
+        });
 
-    if(filters?.level && filters.level.trim()){
-       params = params.set('level', filters.level);
-    }
+        this.cacheLoaded = true;
 
-    params = params.set('descending', 'true');
-
-    return this.http.get<JobsResponse>(this.apiUrl, { params }).pipe(
-      map(response => {
-        if(keyword && keyword.trim()){
-          const keywordLower = keyword.toLowerCase().trim();
-          response.results = response.results.filter(job => 
-            job.name.toLowerCase().includes(keywordLower)
-          );
-        }
-        return response;
+        return this.filterAndPaginateJobs(this.cachedJobs, keyword, filters);
       })
     );
   }
 
-  getJobById(id : number) : Observable<Job>{
-    return this.http.get<Job>(`${this.apiUrl}/${id}`);
+  private filterAndPaginateJobs(allJobs: Job[], keyword?: string, filters?: JobSearchFilters): JobsResponse {
+    let filteredResults = [...allJobs];
+
+    if (keyword && keyword.trim()) {
+      const keywordLower = keyword.trim().toLowerCase();
+      filteredResults = filteredResults.filter(job =>
+        job.title.toLowerCase().includes(keywordLower)
+      );
+    }
+
+    if (filters?.location && filters.location.trim()) {
+      const locationLower = filters.location.trim().toLowerCase();
+      filteredResults = filteredResults.filter(job =>
+        job.location.toLowerCase().includes(locationLower)
+      );
+    }
+
+    const sortedResults = filteredResults.sort((a, b) => b.created_at - a.created_at);
+
+    const page = filters?.page || 1;
+    const startIndex = (page - 1) * 10;
+    const paginatedData = sortedResults.slice(startIndex, startIndex + 10);
+
+    return {
+      data: paginatedData,
+      links: {
+        first: '',
+        last: '',
+        prev: null,
+        next: null
+      },
+      meta: {
+        current_page: page,
+        from: startIndex + 1,
+        last_page: Math.ceil(sortedResults.length / 10),
+        per_page: 10,
+        to: Math.min(startIndex + 10, sortedResults.length),
+        total: sortedResults.length
+      }
+    };
   }
 
-   getLocations(): Observable<string[]> {
+  clearCache(): void {
+    this.cachedJobs = [];
+    this.cacheLoaded = false;
+  }
+
+  getJobBySlug(slug: string): Observable<Job> {
+    return this.http.get<Job>(`${this.apiUrl}/${slug}`);
+  }
+
+  getLocations(): Observable<string[]> {
     return this.searchJobs().pipe(
       map(response => {
         const locations = new Set<string>();
-        response.results.forEach(job => {
-          if (job.locations) {
-            job.locations.forEach((loc: { name: string }) => {
-              if (loc.name) {
-                locations.add(loc.name);
-              }
-            });
+        response.data.forEach(job => {
+          if (job.location) {
+            locations.add(job.location);
           }
         });
         return Array.from(locations).sort();

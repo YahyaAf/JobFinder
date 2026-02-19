@@ -34,7 +34,7 @@
   gap: 10px;
 }
 
-.btn-profile, .btn-logout, .btn-login, .btn-favorites {
+.btn-profile, .btn-logout, .btn-login, .btn-favorites, .btn-applications {
   padding: 10px 20px;
   border: 2px solid white;
   background: transparent;
@@ -46,6 +46,7 @@
 }
 
 .btn-favorites:hover,
+.btn-applications:hover,
 .btn-profile:hover {
   background: white;
   color: #667eea;

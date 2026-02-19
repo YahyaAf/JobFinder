@@ -18,6 +18,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { favoritesReducer } from './core/store/favorites/favorites.reducer';
 import { FavoritesEffects } from './core/store/favorites/favorites.effects';
 import { FavoritesComponent } from './features/favorites/favorites.component';
+import { ApplicationsComponent } from './features/applications/applications.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { FavoritesComponent } from './features/favorites/favorites.component';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    FavoritesComponent
+    FavoritesComponent,
+    ApplicationsComponent
   ],
   imports: [
     BrowserModule,

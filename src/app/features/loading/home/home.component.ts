@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
 import { selectAllFavorites, selectIsFavorite } from '../../../core/store/favorites/favorites.selectors';
 import { Favorite } from '../../../core/model/favorite.model';
+import { ApplicationService } from '../../../core/services/application.service';
+import { Application } from '../../../core/model/application.model';
 
 @Component({
   selector: 'app-home',
@@ -33,12 +35,14 @@ export class HomeComponent implements OnInit {
   isLoggedIn = false;
 
   favorites$: Observable<Favorite[]>;
+  trackedApplications: Set<string> = new Set();
 
   constructor(
     private authService: AuthService,
     private jobService: JobService,
     private router: Router,
-    private store: Store
+    private store: Store,
+    private applicationService: ApplicationService
   ){
     this.favorites$ = this.store.select(selectAllFavorites);
   }
@@ -50,10 +54,24 @@ export class HomeComponent implements OnInit {
 
       if (user) {
         this.store.dispatch(FavoritesActions.loadFavorites({ userId: user.id }));
+        this.loadTrackedApplications();
       }
     });
 
     this.loadJobs();
+  }
+
+  loadTrackedApplications(): void {
+    if (!this.currentUser) return;
+
+    this.applicationService.getApplicationsByUserId(this.currentUser.id).subscribe({
+      next: (applications) => {
+        this.trackedApplications = new Set(applications.map(app => app.offerId));
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des candidatures', error);
+      }
+    });
   }
 
   loadJobs(): void {
@@ -133,8 +151,38 @@ export class HomeComponent implements OnInit {
   }
 
   trackApplication(job: Job): void {
-    console.log('Suivre candidature:', job.title);
-    alert('Fonctionnalité "Suivi de candidature" sera implémentée prochainement!');
+    if (!this.currentUser) {
+      alert('Vous devez être connecté pour suivre une candidature');
+      return;
+    }
+
+    if (this.trackedApplications.has(job.slug)) {
+      alert('Cette candidature est déjà dans votre suivi');
+      return;
+    }
+
+    const application: Application = {
+      userId: this.currentUser.id,
+      offerId: job.slug,
+      apiSource: 'arbeitnow',
+      title: job.title,
+      company: job.company_name,
+      location: job.location,
+      url: job.url,
+      status: 'en_attente',
+      dateAdded: new Date().toISOString()
+    };
+
+    this.applicationService.addApplication(application).subscribe({
+      next: () => {
+        this.trackedApplications.add(job.slug);
+        alert('Candidature ajoutée au suivi avec succès!');
+      },
+      error: (error) => {
+        console.error('Erreur lors de l\'ajout au suivi', error);
+        alert('Erreur lors de l\'ajout au suivi');
+      }
+    });
   }
 
   formatDate(timestamp: number): string {
@@ -162,6 +210,10 @@ export class HomeComponent implements OnInit {
 
   isFavorite(slug: string): Observable<boolean> {
     return this.store.select(selectIsFavorite(slug));
+  }
+
+  isApplicationTracked(slug: string): boolean {
+    return this.trackedApplications.has(slug);
   }
 
 }

@@ -6,6 +6,9 @@
         <button class="btn-favorites" routerLink="/favorites" *ngIf="isLoggedIn">
           ⭐ Mes Favoris
         </button>
+        <button class="btn-applications" routerLink="/applications" *ngIf="isLoggedIn">
+          📋 Mes Candidatures
+        </button>
         <button class="btn-profile" routerLink="/profile" *ngIf="isLoggedIn">
           Mon Profil
         </button>
@@ -128,8 +131,13 @@
                 <span *ngIf="(isFavorite(job.slug) | async)">⭐ Favoris</span>
                 <span *ngIf="!(isFavorite(job.slug) | async)">☆ Ajouter aux favoris</span>
               </button>
-              <button class="btn-track" (click)="trackApplication(job)">
-                📋 Suivre
+              <button
+                class="btn-track"
+                [class.is-tracked]="isApplicationTracked(job.slug)"
+                (click)="trackApplication(job)"
+              >
+                <span *ngIf="isApplicationTracked(job.slug)">✓ En suivi</span>
+                <span *ngIf="!isApplicationTracked(job.slug)">📋 Suivre</span>
               </button>
             </div>
           </div>

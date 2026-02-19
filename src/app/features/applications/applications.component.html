@@ -1,0 +1,86 @@
+<div class="applications-container">
+  <header class="applications-header">
+    <div class="container">
+      <button class="btn-back" (click)="goBack()">
+        ← Retour
+      </button>
+      <h1>📋 Suivi des Candidatures</h1>
+    </div>
+  </header>
+
+  <main class="applications-content">
+    <div class="container">
+      <div class="loader" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement de vos candidatures...</p>
+      </div>
+
+      <div class="applications-list" *ngIf="!loading">
+        <div class="empty-state" *ngIf="applications.length === 0">
+          <div class="empty-icon">📂</div>
+          <h2>Aucune candidature suivie</h2>
+          <p>Commencez à suivre vos candidatures pour les retrouver ici</p>
+          <button class="btn-browse" (click)="goBack()">
+            Parcourir les offres
+          </button>
+        </div>
+
+        <div class="applications-grid" *ngIf="applications.length > 0">
+          <div class="application-card" *ngFor="let app of applications">
+            <div class="card-header">
+              <div class="header-left">
+                <h3 class="app-title">{{ app.title }}</h3>
+                <p class="company-name">{{ app.company }}</p>
+              </div>
+              <button class="btn-remove" (click)="removeApplication(app)" title="Retirer du suivi">
+                ✕
+              </button>
+            </div>
+
+            <div class="app-info">
+              <div class="info-item">
+                <span class="icon">📍</span>
+                <span>{{ app.location }}</span>
+              </div>
+              <div class="info-item">
+                <span class="icon">📅</span>
+                <span>Ajouté le {{ formatDate(app.dateAdded) }}</span>
+              </div>
+            </div>
+
+            <div class="status-section">
+              <label class="status-label">Statut :</label>
+              <select
+                class="status-select"
+                [value]="app.status"
+                [class]="getStatusClass(app.status)"
+                (change)="updateStatus(app, $any($event.target).value)"
+              >
+                <option value="en_attente">{{ statusLabels.en_attente }}</option>
+                <option value="accepte">{{ statusLabels.accepte }}</option>
+                <option value="refuse">{{ statusLabels.refuse }}</option>
+              </select>
+            </div>
+
+            <div class="notes-section">
+              <label class="notes-label">Notes personnelles :</label>
+              <textarea
+                class="notes-textarea"
+                [value]="app.notes || ''"
+                (blur)="updateNotes(app, $any($event.target).value)"
+                placeholder="Ajoutez vos notes (ex: Candidature envoyée le..., Relancer dans...)"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-view-offer" (click)="viewOffer(app.url)">
+                👁️ Voir l'offre
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

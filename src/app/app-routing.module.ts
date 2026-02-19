@@ -6,6 +6,7 @@ import { HomeComponent } from './features/loading/home/home.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ProfileComponent } from './features/auth/profile/profile.component';
 import { FavoritesComponent } from './features/favorites/favorites.component';
+import { ApplicationsComponent } from './features/applications/applications.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'favorites',
     component: FavoritesComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'applications',
+    component: ApplicationsComponent,
     canActivate: [authGuard]
   }
 ];

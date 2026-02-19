@@ -44,6 +44,16 @@
       "location": "Eibelstadt",
       "created_at": 1771427138,
       "id": 4
+    },
+    {
+      "userId": 1,
+      "slug": "people-culture-manager-stuttgart-406587",
+      "title": "People & Culture Manager (m/w/d)",
+      "company_name": "Solarize",
+      "location": "Stuttgart",
+      "created_at": 1771432143,
+      "id": 5
     }
-  ]
+  ],
+  "applications": []
 }

@@ -2,68 +2,14 @@
 .home-container {
   min-height: 100vh;
   background-color: #f5f7fa;
-}
-
-/* Header */
-.home-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 20px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.home-header .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.home-header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.home-header nav {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-profile, .btn-logout, .btn-login, .btn-favorites, .btn-applications {
-  padding: 10px 20px;
-  border: 2px solid white;
-  background: transparent;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.btn-favorites:hover,
-.btn-applications:hover,
-.btn-profile:hover {
-  background: white;
-  color: #667eea;
-}
-
-.btn-logout:hover {
-  background: rgba(255, 0, 0, 0.2);
-}
-
-.btn-login:hover {
-  background: white;
-  color: #667eea;
+  flex-direction: column;
 }
 
 /* Content */
 .home-content {
   padding: 40px 0;
+  flex: 1;
 }
 
 .container {
@@ -352,6 +298,18 @@
 .btn-track:hover {
   background: #667eea;
   color: white;
+}
+
+.btn-track.is-tracked {
+  background: #2ecc71;
+  border-color: #2ecc71;
+  color: white;
+  font-weight: 700;
+}
+
+.btn-track.is-tracked:hover {
+  background: #27ae60;
+  border-color: #27ae60;
 }
 
 /* Aucun résultat */

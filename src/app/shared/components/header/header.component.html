@@ -1,1 +1,26 @@
-<p>header works!</p>
+<header class="app-header">
+  <div class="container">
+    <h1 class="logo" routerLink="/home">🎯 JobFinder</h1>
+    <nav class="nav">
+      <button class="btn-nav" routerLink="/home" *ngIf="isLoggedIn">
+        🏠 Accueil
+      </button>
+      <button class="btn-nav" routerLink="/favorites" *ngIf="isLoggedIn">
+        ⭐ Mes Favoris
+      </button>
+      <button class="btn-nav" routerLink="/applications" *ngIf="isLoggedIn">
+        📋 Mes Candidatures
+      </button>
+      <button class="btn-nav" routerLink="/profile" *ngIf="isLoggedIn">
+        👤 Mon Profil
+      </button>
+      <button class="btn-logout" (click)="logout()" *ngIf="isLoggedIn">
+        🚪 Déconnexion
+      </button>
+      <button class="btn-login" routerLink="/login" *ngIf="!isLoggedIn">
+        🔑 Se connecter
+      </button>
+    </nav>
+  </div>
+</header>
+

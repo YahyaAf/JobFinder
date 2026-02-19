@@ -29,15 +29,6 @@
     },
     {
       "userId": 1,
-      "slug": "ingenieure-architektur-hochbau-hanover-64010",
-      "title": "Ingenieure (m/w/d) Architektur (Hochbau)",
-      "company_name": "PALTRON GmbH",
-      "location": "Hanover",
-      "created_at": 1771427141,
-      "id": 3
-    },
-    {
-      "userId": 1,
       "slug": "fachinformatiker-systemintegration-it-multitalent-eibelstadt-77145",
       "title": "Fachinformatiker Systemintegration - IT Multitalent (m/w/d)",
       "company_name": "SUNTEC Energiesysteme GmbH",
@@ -53,7 +44,30 @@
       "location": "Stuttgart",
       "created_at": 1771432143,
       "id": 5
+    },
+    {
+      "userId": 1,
+      "slug": "it-systemadministrator-in-dresden-79256",
+      "title": "IT-Systemadministrator (m/w/d) in Dresden",
+      "company_name": "MY Humancapital GmbH",
+      "location": "Dresden",
+      "created_at": 1771431454,
+      "id": 6
     }
   ],
-  "applications": []
+  "applications": [
+    {
+      "userId": 1,
+      "offerId": "it-systemadministrator-in-dresden-79256",
+      "apiSource": "arbeitnow",
+      "title": "IT-Systemadministrator (m/w/d) in Dresden",
+      "company": "MY Humancapital GmbH",
+      "location": "Dresden",
+      "url": "https://www.arbeitnow.com/jobs/companies/my-humancapital-gmbh/it-systemadministrator-in-dresden-79256",
+      "status": "accepte",
+      "dateAdded": "2026-02-19T00:39:58.986Z",
+      "id": 1,
+      "notes": "test"
+    }
+  ]
 }

@@ -1,26 +1,5 @@
 <div class="home-container">
-  <header class="home-header">
-    <div class="container">
-      <h1>🎯 JobFinder</h1>
-      <nav>
-        <button class="btn-favorites" routerLink="/favorites" *ngIf="isLoggedIn">
-          ⭐ Mes Favoris
-        </button>
-        <button class="btn-applications" routerLink="/applications" *ngIf="isLoggedIn">
-          📋 Mes Candidatures
-        </button>
-        <button class="btn-profile" routerLink="/profile" *ngIf="isLoggedIn">
-          Mon Profil
-        </button>
-        <button class="btn-logout" (click)="logout()" *ngIf="isLoggedIn">
-          Déconnexion
-        </button>
-        <button class="btn-login" routerLink="/login" *ngIf="!isLoggedIn">
-          Se connecter
-        </button>
-      </nav>
-    </div>
-  </header>
+  <app-header></app-header>
 
   <main class="home-content">
     <div class="container">
@@ -175,4 +154,6 @@
 
     </div>
   </main>
+
+  <app-footer></app-footer>
 </div>

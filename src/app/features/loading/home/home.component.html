@@ -14,6 +14,18 @@
       <div class="welcome-card" *ngIf="!currentUser">
         <h2>Bienvenue sur JobFinder! 🎯</h2>
         <p class="subtitle">Recherchez parmi des milliers d'offres d'emploi</p>
+        <div class="info-message">
+          <p>💡 <strong>Connectez-vous</strong> pour accéder à toutes les fonctionnalités :</p>
+          <ul>
+            <li>⭐ Sauvegarder vos offres favorites</li>
+            <li>📋 Suivre vos candidatures</li>
+            <li>👤 Gérer votre profil</li>
+          </ul>
+          <div class="cta-buttons">
+            <button class="btn-cta" routerLink="/login">Se connecter</button>
+            <button class="btn-cta-secondary" routerLink="/register">Créer un compte</button>
+          </div>
+        </div>
       </div>
 
       <!-- Barre de recherche -->

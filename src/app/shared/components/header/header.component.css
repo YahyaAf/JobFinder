@@ -34,7 +34,7 @@
   flex-wrap: wrap;
 }
 
-.btn-nav, .btn-logout, .btn-login {
+.btn-nav, .btn-logout, .btn-login, .btn-register {
   padding: 10px 20px;
   border: 2px solid white;
   background: transparent;
@@ -46,7 +46,7 @@
   font-size: 14px;
 }
 
-.btn-nav:hover, .btn-login:hover {
+.btn-nav:hover, .btn-login:hover, .btn-register:hover {
   background: white;
   color: #667eea;
 }

@@ -6,6 +6,13 @@
       "prenom": "Af",
       "email": "yahya@gmail.com",
       "password": "yahya123"
+    },
+    {
+      "nom": "zakaria",
+      "prenom": "zakaria",
+      "email": "zakaria@gmail.com",
+      "password": "zakaria123",
+      "id": 2
     }
   ],
   "favoritesOffers": [

@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="logo" routerLink="/home">🎯 JobFinder</h1>
     <nav class="nav">
-      <button class="btn-nav" routerLink="/home" *ngIf="isLoggedIn">
+      <button class="btn-nav" routerLink="/home">
         🏠 Accueil
       </button>
       <button class="btn-nav" routerLink="/favorites" *ngIf="isLoggedIn">
@@ -19,6 +19,9 @@
       </button>
       <button class="btn-login" routerLink="/login" *ngIf="!isLoggedIn">
         🔑 Se connecter
+      </button>
+      <button class="btn-register" routerLink="/register" *ngIf="!isLoggedIn">
+        📝 S'inscrire
       </button>
     </nav>
   </div>

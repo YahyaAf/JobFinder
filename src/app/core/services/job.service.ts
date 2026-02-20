@@ -81,27 +81,4 @@ export class JobService {
       }
     };
   }
-
-  clearCache(): void {
-    this.cachedJobs = [];
-    this.cacheLoaded = false;
-  }
-
-  getJobBySlug(slug: string): Observable<Job> {
-    return this.http.get<Job>(`${this.apiUrl}/${slug}`);
-  }
-
-  getLocations(): Observable<string[]> {
-    return this.searchJobs().pipe(
-      map(response => {
-        const locations = new Set<string>();
-        response.data.forEach(job => {
-          if (job.location) {
-            locations.add(job.location);
-          }
-        });
-        return Array.from(locations).sort();
-      })
-    );
-  }
 }

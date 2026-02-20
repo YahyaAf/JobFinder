@@ -26,8 +26,4 @@ export class ApplicationService {
   removeApplication(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-  isApplicationTracked(userId: number, offerId: string): Observable<Application[]> {
-    return this.http.get<Application[]>(`${this.apiUrl}?userId=${userId}&offerId=${offerId}`);
-  }
 }
